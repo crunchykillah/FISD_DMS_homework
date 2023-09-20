@@ -1,0 +1,5 @@
+{"department": {  "phoneNumber": "999999",  "departmentNumber": "1"}
+{"employee": {  "employeeNumber": 1,  "surname": "Ivanov",  "department": {  "phoneNumber": "999999",  "departmentNumber": "1"}}
+{"customer": {  "nameOfCustomer": "Ivan",  "surnameOfCustomer": "Sergeevich",  "phoneNumber": "9999"}
+{"project": {  "projectNumber": 25,  "customer": {  "nameOfCustomer": "Ivan",  "surnameOfCustomer": "Sergeevich",  "phoneNumber": "9999"}}
+{"task": {  "employee": {  "employeeNumber": 1,  "surname": "Ivanov",  "department": {  "phoneNumber": "999999",  "departmentNumber": "1"}},  "project": {  "projectNumber": 25,  "customer": {  "nameOfCustomer": "Ivan",  "surnameOfCustomer": "Sergeevich",  "phoneNumber": "9999"}},  "taskNumber": 12}

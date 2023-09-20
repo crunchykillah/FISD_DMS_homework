@@ -1,0 +1,44 @@
+<Department>
+  <phoneNumber>999999</phoneNumber>
+  <departmentNumber>1</departmentNumber>
+</Department>
+<Employee>
+  <employeeNumber>1</employeeNumber>
+  <surname>Ivanov</surname>
+  <department>
+  <phoneNumber>999999</phoneNumber>
+  <departmentNumber>1</departmentNumber>
+</department>
+</Employee>
+<Customer>
+  <nameOfCustomer>Ivan</nameOfCustomer>
+  <surnameOfCustomer>Sergeevich</surnameOfCustomer>
+  <phoneNumber>9999</phoneNumber>
+</Customer>
+<Project>
+  <projectNumber>25</projectNumber>
+  <customer>
+  <nameOfCustomer>Ivan</nameOfCustomer>
+  <surnameOfCustomer>Sergeevich</surnameOfCustomer>
+  <phoneNumber>9999</phoneNumber>
+</customer>
+</Project>
+<Task>
+  <employee>
+  <employeeNumber>1</employeeNumber>
+  <surname>Ivanov</surname>
+  <department>
+  <phoneNumber>999999</phoneNumber>
+  <departmentNumber>1</departmentNumber>
+</department>
+</employee>
+  <project>
+  <projectNumber>25</projectNumber>
+  <customer>
+  <nameOfCustomer>Ivan</nameOfCustomer>
+  <surnameOfCustomer>Sergeevich</surnameOfCustomer>
+  <phoneNumber>9999</phoneNumber>
+</customer>
+</project>
+  <taskNumber>12</taskNumber>
+</Task>
