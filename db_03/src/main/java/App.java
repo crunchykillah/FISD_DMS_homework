@@ -11,11 +11,10 @@ import java.sql.SQLException;
 public class App {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/db_course2_task1";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "xxxx";
+    private static final String DB_PASSWORD = "root";
 
     public static void main(String[] args) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            cleanupDataBase(connection);
             createTables(connection);
             insertRecords(connection);
             insertRelatedRecords(connection);
@@ -24,25 +23,6 @@ public class App {
             getByCustomerId(connection);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static void cleanupDataBase(Connection connection) throws SQLException {
-        String cleanupCustomer = "drop table if exists customer cascade;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(cleanupCustomer)) {
-            preparedStatement.executeUpdate();
-        }
-        String cleanupProject = "drop table if exists project cascade;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(cleanupProject)) {
-            preparedStatement.executeUpdate();
-        }
-        String cleanupSequence = "drop sequence if exists customer_sequence;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(cleanupSequence)) {
-            preparedStatement.executeUpdate();
-        }
-        cleanupSequence = "drop sequence if exists project_sequence;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(cleanupSequence)) {
-            preparedStatement.executeUpdate();
         }
     }
 
@@ -126,6 +106,7 @@ public class App {
             preparedStatement.executeUpdate();
         }
     }
+
     private static void getByCustomerId(Connection connection) throws SQLException {
         String selectProjectsSQL = "SELECT * FROM Project WHERE customerId = ?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(selectProjectsSQL)) {

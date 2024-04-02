@@ -9,7 +9,25 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>lab01</module>
+        <module>oris_01</module>
+        <module>oris_02_MAZE_GAME</module>
+        <module>db_01</module>
+        <module>oris_03_HTTP</module>
+        <module>db_03</module>
+        <module>oris_04</module>
+        <module>gui_trying</module>
+        <module>db_01_2</module>
+        <module>db_2sem_1</module>
+        <module>oris_2sem_1</module>
+        <module>oris_2sem_components</module>
+        <module>oris_test</module>
+        <module>oris_2sem_3</module>
+        <module>oris_2sem_mycontext</module>
+        <module>oris_2sem_mydispatcher</module>
+        <module>oris_2sem_entitymanager</module>
+        <module>oris_jpa_task</module>
+        <module>oris_jpa</module>
+        <module>db_eav</module>
     </modules>
 
     <properties>

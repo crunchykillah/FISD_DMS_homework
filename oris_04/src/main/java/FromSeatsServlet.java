@@ -4,6 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.TemplateLoader;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -12,7 +13,8 @@ import java.sql.*;
 public class FromSeatsServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/demo";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "xxxx";
+    private static final String DB_PASSWORD = "root";
+    private static final String TITLE = "SEATS";
     private Connection connection;
 
     @Override
@@ -26,14 +28,25 @@ public class FromSeatsServlet extends HttpServlet {
     }
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Writer writer = resp.getWriter();
-        resp.setContentType("text/html; charset=UTF-8");
-        writer.write("<!doctype html>");
-        writer.write("<html lang=\"en\">");
-        writer.write("<head>");
-        writer.write("<meta charset-\"UTF-8\">");
-        writer.write("<title>TICKETS</title>");
-        writer.write("</head>");
-        writer.write("<body>");
+        String template = TemplateLoader.loadTemplateFromResource("site.html");
+        template = template.replace("${title}", TITLE);
+        template = template.replace("&{content}",createContent());
+        writer.write(template);
+    }
+    @Override
+    public void destroy() {
+        System.out.println("destroy");
+        try{
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private String createContent() {
+        StringBuilder content = new StringBuilder();
+
         String statement = "select\n" +
                 "  a.model,\n" +
                 "  SUM(CASE WHEN s.fare_conditions = 'Economy' THEN 1 ELSE 0 END) AS economy_seats,\n" +
@@ -46,27 +59,21 @@ public class FromSeatsServlet extends HttpServlet {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                writer.write(resultSet.getString("model"));
-                writer.write(": " + resultSet.getString("economy_seats"));
-                writer.write(": " + resultSet.getString("business_seats"));
-                writer.write("<br/>");
+
+            while (resultSet.next()) {
+                String model = "Model: " + resultSet.getString("model");
+                String economySeats = "Economy seats: " + resultSet.getString("economy_seats");
+                String businessSeats = "Business seats: " + resultSet.getString("business_seats");
+
+
+                content.append("<p><font face=\"Impact,Charcoal, sans-serif\">").append(model).append("</p>");
+                content.append("<p><font face=\"Impact,Charcoal, sans-serif\">").append(economySeats).append("</p>");
+                content.append("<p><font face=\"Impact,Charcoal, sans-serif\">").append(businessSeats).append("</p>");
+                content.append("<br/>");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        writer.write("</body>");
-        writer.write("</html>");
-    }
-    @Override
-    public void destroy() {
-        System.out.println("destroy");
-        try{
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return content.toString();
     }
 }

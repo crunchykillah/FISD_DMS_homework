@@ -4,16 +4,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.TemplateLoader;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.sql.*;
 
 @WebServlet("/tickets_db")
 public class FromTicketsServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/demo";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "xxxx";
+    private static final String DB_PASSWORD = "root";
+    private static final String TITLE = "TICKETS";
     private Connection connection;
 
     @Override
@@ -27,30 +28,10 @@ public class FromTicketsServlet extends HttpServlet {
     }
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Writer writer = resp.getWriter();
-        writer.write("<!doctype html>");
-        writer.write("<html lang=\"en\">");
-        writer.write("<head>");
-        writer.write("<meta charset-\"UTF-8\">");
-        writer.write("<title>TICKETS</title>");
-        writer.write("</head>");
-        writer.write("<body>");
-        String statement = "select passenger_name,contact_data\n" +
-                "from\n" +
-                "    tickets\n" +
-                "LIMIT 10;";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(statement);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                writer.write(resultSet.getString("passenger_name"));
-                writer.write(": " + resultSet.getString("contact_data"));
-                writer.write("<br/>");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        writer.write("</body>");
-        writer.write("</html>");
+        String template = TemplateLoader.loadTemplateFromResource("site.html");
+        template = template.replace("${title}", TITLE);
+        template = template.replace("&{content}",createContent());
+        writer.write(template);
     }
     @Override
     public void destroy() {
@@ -63,6 +44,25 @@ public class FromTicketsServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+    private String createContent() {
+        StringBuilder content = new StringBuilder();
 
+        String statement = "select passenger_name, contact_data from tickets LIMIT 10;";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(statement);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
+            while (resultSet.next()) {
+                String nameAndSurname = "Name and surname: " + resultSet.getString("passenger_name");
+                String contactData = "Contact data: " + resultSet.getString("contact_data");
+
+                content.append("<p><font face=\"Impact,Charcoal, sans-serif\">").append(nameAndSurname).append("</p>");
+                content.append("<p><font face=\"Impact,Charcoal, sans-serif\">").append(contactData).append("</p>");
+                content.append("<br/>");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return content.toString();
+    }
 }
